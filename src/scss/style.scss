@@ -1,0 +1,14 @@
+@import "base.scss";
+body {
+  font-family: 'Ubuntu', serif; font-size: 20px;
+  background: white; color: black;
+}
+
+.li {
+  display: flex;
+}
+
+li {
+  margin-right: 10px;
+  width: 35%
+}
