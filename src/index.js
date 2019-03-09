@@ -5,29 +5,25 @@ import ReactDOM from 'react-dom';
 
 
 
-class TodoApp extends React.Component{
+class CommentApp extends React.Component{
     constructor(){
         super();
-        if (localStorage.getItem("comment")!== null) {
-            let comment = localStorage.getItem("comment").split(';; ');
-            let author = localStorage.getItem("author").split(';; ');
-            let myTime = localStorage.getItem("time").split(';; ');
-            let checked = localStorage.getItem("checked").split(';; ');
+        if (localStorage.getItem("content")!== null) {
+
+            let myContent = JSON.parse(localStorage.getItem("content"));
             this.state = {
                 todos: [
                 ],
                 newTodoText: '',
                 newAuthor: '',
-                time: '',
-                localStorage: ''
+                time: ''
             };
-            for (let i=1; i<comment.length; i++)
+            for (let i=0; i<myContent.length; i++)
             {
                 this.state.todos.push({
-                    name: comment[i],
-                    author: author[i],
-                    time: myTime[i],
-                    checked: ! checked[i]
+                    name: myContent[i].name,
+                    author: myContent[i].author,
+                    time: myContent[i].time
                 })
             }
         }
@@ -37,8 +33,7 @@ class TodoApp extends React.Component{
                 todos: [],
                 newTodoText: '',
                 newAuthor: '',
-                time: '',
-                localStorage: ''
+                time: ''
             };
         }
 
@@ -49,10 +44,17 @@ class TodoApp extends React.Component{
         this.setState({todos});
         localStorage.clear();
         this.state.todos.map((todo, i) => {
-            localStorage.setItem('comment', localStorage.getItem("comment") + ";; " + todo.name);
-            localStorage.setItem('author', localStorage.getItem("author") + ";; " +  todo.author);
-            localStorage.setItem('time', localStorage.getItem("time") + ";; " + todo.time);
-            localStorage.setItem('checked', localStorage.getItem("checked") + ";; " +  todo.checked);
+            (function () {
+                let myContent = [];
+                myContent.push({
+                    name: todo.name, author: todo.author, time: todo.time
+
+                });
+                if (localStorage.getItem("content")!==null)
+                    localStorage.setItem('content', JSON.stringify(JSON.parse(localStorage.getItem("content")).concat(myContent)));
+                else
+                    localStorage.setItem('content', JSON.stringify(myContent));
+            })();
         })
     }
 
@@ -67,8 +69,7 @@ class TodoApp extends React.Component{
         todos.push({
             name: this.state.newTodoText,
             author: this.state.newAuthor,
-            time: time,
-            checked: false
+            time: time
         });
         this.setState({
             todos,
@@ -76,11 +77,16 @@ class TodoApp extends React.Component{
             newAuthor: '',
             time
         });
+        let content = [];
         (function () {
-            localStorage.setItem('comment', localStorage.getItem("comment") + ";; " + todos[todos.length-1].name);
-            localStorage.setItem('author', localStorage.getItem("author") + ";; " +  todos[todos.length-1].author);
-            localStorage.setItem('time', localStorage.getItem("time") + ";; " + time);
-            localStorage.setItem('checked', localStorage.getItem("checked") + ";; " +  todos[todos.length-1].checked);
+            content.push({
+                name: todos[todos.length-1].name, author: todos[todos.length-1].author, time: todos[todos.length-1].time
+
+            });
+            if (localStorage.getItem("content")!==null)
+            localStorage.setItem('content', JSON.stringify(JSON.parse(localStorage.getItem("content")).concat(content)));
+            else
+                localStorage.setItem('content', JSON.stringify(content));
         })();
     }
 
@@ -91,12 +97,10 @@ class TodoApp extends React.Component{
             <ol id="ol">
                 {
                     this.state.todos.map((todo, i) => {
-                        const className = todo.checked ? 'checked' : '';
                         return (
                             <div class="li">
                                 <li
                                     key={i}
-                                    className={className}
                                 >
                                     {todo.name}, {todo.author}, {todo.time}
                                 </li>
@@ -151,7 +155,7 @@ class TodoApp extends React.Component{
 
 
 ReactDOM.render(
-  <TodoApp />,
+  <CommentApp />,
   document.querySelector('#app')
 );
 
