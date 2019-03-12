@@ -1,163 +1,154 @@
-import './scss/style.scss';
+import "./scss/style.scss";
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
-
-
-class CommentApp extends React.Component{
-    constructor(){
+class CommentApp extends React.Component {
+    constructor() {
         super();
-        if (localStorage.getItem("content")!== null) {
-
+        if (localStorage.getItem("content") !== null) {
             let myContent = JSON.parse(localStorage.getItem("content"));
             this.state = {
-                todos: [
-                ],
-                newTodoText: '',
-                newAuthor: '',
-                time: ''
+                todos: [],
+                textOfComment: "",
+                author: "",
+                time: ""
             };
-            for (let i=0; i<myContent.length; i++)
-            {
+            for (let i = 0; i < myContent.length; i++) {
                 this.state.todos.push({
-                    name: myContent[i].name,
+                    comment: myContent[i].comment,
                     author: myContent[i].author,
                     time: myContent[i].time
-                })
+                });
             }
-        }
-        else
-        {
+        } else {
             this.state = {
                 todos: [],
-                newTodoText: '',
-                newAuthor: '',
-                time: ''
+                textOfComment: "",
+                author: "",
+                time: ""
             };
         }
-
     }
-    deleteLi(key){
+    deleteLi(key) {
         let todos = this.state.todos;
         delete todos[key];
-        this.setState({todos});
+        this.setState({ todos });
         localStorage.clear();
         this.state.todos.map((todo, i) => {
-            (function () {
+            (function() {
                 let myContent = [];
                 myContent.push({
-                    name: todo.name, author: todo.author, time: todo.time
-
+                    comment: todo.comment,
+                    author: todo.author,
+                    time: todo.time
                 });
-                if (localStorage.getItem("content")!==null)
-                    localStorage.setItem('content', JSON.stringify(JSON.parse(localStorage.getItem("content")).concat(myContent)));
-                else
-                    localStorage.setItem('content', JSON.stringify(myContent));
+                if (localStorage.getItem("content") !== null)
+                    localStorage.setItem(
+                        "content",
+                        JSON.stringify(
+                            JSON.parse(localStorage.getItem("content")).concat(myContent)
+                        )
+                    );
+                else localStorage.setItem("content", JSON.stringify(myContent));
             })();
-        })
+        });
     }
 
-    addTodo() {
-        let time = new Date().toLocaleString('ru', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'
+    addComment() {
+        let time = new Date().toLocaleString("ru", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric"
         });
-        console.log(1);
         const todos = this.state.todos;
-        todos.push({
-            name: this.state.newTodoText,
-            author: this.state.newAuthor,
-            time: time
-        });
-        this.setState({
-            todos,
-            newTodoText: '',
-            newAuthor: '',
-            time
-        });
-        let content = [];
-        (function () {
-            content.push({
-                name: todos[todos.length-1].name, author: todos[todos.length-1].author, time: todos[todos.length-1].time
-
+        if (this.state.textOfComment !== "" &&  this.state.author !== "") {
+            todos.push({
+                comment: this.state.textOfComment,
+                author: this.state.author,
+                time: time
             });
-            if (localStorage.getItem("content")!==null)
-            localStorage.setItem('content', JSON.stringify(JSON.parse(localStorage.getItem("content")).concat(content)));
-            else
-                localStorage.setItem('content', JSON.stringify(content));
-        })();
+            this.setState({
+                todos,
+                textOfComment: "",
+                author: "",
+                time
+            });
+            let content = [];
+            (function () {
+                content.push({
+                    comment: todos[todos.length - 1].comment,
+                    author: todos[todos.length - 1].author,
+                    time: todos[todos.length - 1].time
+                });
+                if (localStorage.getItem("content") !== null)
+                    localStorage.setItem(
+                        "content",
+                        JSON.stringify(
+                            JSON.parse(localStorage.getItem("content")).concat(content)
+                        )
+                    );
+                else localStorage.setItem("content", JSON.stringify(content));
+            })();
+        }
+        else alert("Введите все данные (комментарий и автор)");
     }
 
-    render(){
+    render() {
         // language=JavaScript
-        return(
-            <div id="content">
-            <ol id="ol">
-                {
-                    this.state.todos.map((todo, i) => {
+        return (
+            <div>
+                <ol id="ol">
+                    {this.state.todos.map((todo, i) => {
                         return (
-                            <div class="li">
-                                <li
-                                    key={i}
-                                >
-                                    {todo.name}, {todo.author}, {todo.time}
+                            <div className="li" key={i}>
+                                <li>
+                                    {todo.comment}, {todo.author}, {todo.time}
                                 </li>
                                 <input
                                     type="button"
                                     id="delButton"
                                     value="Удалить"
                                     onClick={ev => {
-                                        this.deleteLi(i)
+                                        this.deleteLi(i);
                                     }}
                                 />
                             </div>
-
-                        )
-                    })
-                }
-            </ol>
-            <input
-                type = "text"
-                placeholder="Комментарий"
-                value = {this.state.newTodoText}
-                onChange={ev => {
-                    this.setState({ newTodoText: ev.target.value});
-                }}
-                onKeyUp ={ev => {
-                    if (ev.keyCode === 13) {
-                        this.addTodo();
-                    }
-                }
-                }
-            />
+                        );
+                    })}
+                </ol>
                 <input
-                    type = "text"
-                    placeholder="Автор"
-                    value = {this.state.newAuthor}
+                    type="text"
+                    placeholder="Комментарий"
+                    value={this.state.textOfComment}
                     onChange={ev => {
-                        this.setState({ newAuthor: ev.target.value});
+                        this.setState({ textOfComment: ev.target.value });
                     }}
-                    onKeyUp ={ev => {
+                    onKeyUp={ev => {
                         if (ev.keyCode === 13) {
-                            this.addTodo();
+                            this.addComment();
                         }
-                    }
-                    }
+                    }}
+                />
+                <input
+                    type="text"
+                    placeholder="Автор"
+                    value={this.state.author}
+                    onChange={ev => {
+                        this.setState({ author: ev.target.value });
+                    }}
+                    onKeyUp={ev => {
+                        if (ev.keyCode === 13) {
+                            this.addComment();
+                        }
+                    }}
                 />
             </div>
-
         );
     }
-
 }
 
-
-ReactDOM.render(
-  <CommentApp />,
-  document.querySelector('#app')
-);
-
-
-
+ReactDOM.render(<CommentApp />, document.querySelector("#app"));

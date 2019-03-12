@@ -1,14 +1,1 @@
-h1 {
-  font-size: 1em; }
-
-.checked {
-  text-decoration: line-through; }
-
-ul li {
-  cursor: pointer; }
-
-body {
-  font-family: 'Ubuntu', serif;
-  font-size: 20px;
-  background: white;
-  color: black; }
+h1{font-size:1em}.checked{text-decoration:line-through}ul li{cursor:pointer}input{margin-right:2px}body{font-family:'Ubuntu', serif;font-size:20px;background:white;color:black}.li{display:flex}li{margin-right:10px;width:35%}
