@@ -9,21 +9,21 @@ class CommentApp extends React.Component {
         if (localStorage.getItem("content") !== null) {
             let myContent = JSON.parse(localStorage.getItem("content"));
             this.state = {
-                todos: [],
+                allComments: [],
                 textOfComment: "",
                 author: "",
                 time: ""
             };
             for (let i = 0; i < myContent.length; i++) {
-                this.state.todos.push({
-                    comment: myContent[i].comment,
+                this.state.allComments.push({
+                    text: myContent[i].text,
                     author: myContent[i].author,
                     time: myContent[i].time
                 });
             }
         } else {
             this.state = {
-                todos: [],
+                allComments: [],
                 textOfComment: "",
                 author: "",
                 time: ""
@@ -31,17 +31,17 @@ class CommentApp extends React.Component {
         }
     }
     deleteLi(key) {
-        let todos = this.state.todos;
-        delete todos[key];
-        this.setState({ todos });
+        let allComments = this.state.allComments;
+        delete allComments[key];
+        this.setState({ allComments: allComments });
         localStorage.clear();
-        this.state.todos.map((todo, i) => {
+        this.state.allComments.map((comment, i) => {
             (function() {
                 let myContent = [];
                 myContent.push({
-                    comment: todo.comment,
-                    author: todo.author,
-                    time: todo.time
+                    text: comment.text,
+                    author: comment.author,
+                    time: comment.time
                 });
                 if (localStorage.getItem("content") !== null)
                     localStorage.setItem(
@@ -64,15 +64,15 @@ class CommentApp extends React.Component {
             minute: "numeric",
             second: "numeric"
         });
-        const todos = this.state.todos;
+        const allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
-            todos.push({
-                comment: this.state.textOfComment,
+            allComments.push({
+                text: this.state.textOfComment,
                 author: this.state.author,
                 time: time
             });
             this.setState({
-                todos,
+                allComments: allComments,
                 textOfComment: "",
                 author: "",
                 time
@@ -80,9 +80,9 @@ class CommentApp extends React.Component {
             let content = [];
             (function () {
                 content.push({
-                    comment: todos[todos.length - 1].comment,
-                    author: todos[todos.length - 1].author,
-                    time: todos[todos.length - 1].time
+                    text: allComments[allComments.length - 1].text,
+                    author: allComments[allComments.length - 1].author,
+                    time: allComments[allComments.length - 1].time
                 });
                 if (localStorage.getItem("content") !== null)
                     localStorage.setItem(
@@ -102,11 +102,11 @@ class CommentApp extends React.Component {
         return (
             <div>
                 <ol id="ol">
-                    {this.state.todos.map((todo, i) => {
+                    {this.state.allComments.map((comment, i) => {
                         return (
                             <div className="li" key={i}>
                                 <li>
-                                    {todo.comment}, {todo.author}, {todo.time}
+                                    {comment.text}, {comment.author}, {comment.time}
                                 </li>
                                 <input
                                     type="button"

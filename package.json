@@ -1,5 +1,5 @@
 {
-  "comment": "app",
+  "text": "app",
   "version": "1.0.1",
   "description": "Simple React Hello World",
   "main": "index.js",
