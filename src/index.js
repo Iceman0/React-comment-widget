@@ -7,18 +7,18 @@ class CommentApp extends React.Component {
     constructor() {
         super();
         if (localStorage.getItem("content") !== null) {
-            let myContent = JSON.parse(localStorage.getItem("content"));
+            let savedContent = JSON.parse(localStorage.getItem("content"));
             this.state = {
                 allComments: [],
                 textOfComment: "",
                 author: "",
                 time: ""
             };
-            for (let i = 0; i < myContent.length; i++) {
+            for (let i = 0; i < savedContent.length; i++) {
                 this.state.allComments.push({
-                    text: myContent[i].text,
-                    author: myContent[i].author,
-                    time: myContent[i].time
+                    text: savedContent[i].text,
+                    author: savedContent[i].author,
+                    time: savedContent[i].time
                 });
             }
         } else {
