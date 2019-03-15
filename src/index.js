@@ -14,13 +14,7 @@ class CommentApp extends React.Component {
                 author: "",
                 time: ""
             };
-            for (let i = 0; i < savedContent.length; i++) {
-                this.state.allComments.push({
-                    text: savedContent[i].text,
-                    author: savedContent[i].author,
-                    time: savedContent[i].time
-                });
-            }
+            this.state.allComments = [...savedContent];
         } else {
             this.state = {
                 allComments: [],
@@ -31,28 +25,9 @@ class CommentApp extends React.Component {
         }
     }
     deleteLi(key) {
-        let allComments = this.state.allComments;
-        delete allComments[key];
-        this.setState({ allComments: allComments });
-        localStorage.clear();
-        this.state.allComments.map((comment, i) => {
-            (function() {
-                let myContent = [];
-                myContent.push({
-                    text: comment.text,
-                    author: comment.author,
-                    time: comment.time
-                });
-                if (localStorage.getItem("content") !== null)
-                    localStorage.setItem(
-                        "content",
-                        JSON.stringify(
-                            JSON.parse(localStorage.getItem("content")).concat(myContent)
-                        )
-                    );
-                else localStorage.setItem("content", JSON.stringify(myContent));
-            })();
-        });
+        const allComments = this.state.allComments.filter((comment, i) => (key !== i) ? comment : null);
+        this.setState({allComments: allComments});
+        localStorage.setItem('content', JSON.stringify(allComments));
     }
 
     addComment() {
@@ -77,22 +52,7 @@ class CommentApp extends React.Component {
                 author: "",
                 time
             });
-            let content = [];
-            (function () {
-                content.push({
-                    text: allComments[allComments.length - 1].text,
-                    author: allComments[allComments.length - 1].author,
-                    time: allComments[allComments.length - 1].time
-                });
-                if (localStorage.getItem("content") !== null)
-                    localStorage.setItem(
-                        "content",
-                        JSON.stringify(
-                            JSON.parse(localStorage.getItem("content")).concat(content)
-                        )
-                    );
-                else localStorage.setItem("content", JSON.stringify(content));
-            })();
+            localStorage.setItem('content', JSON.stringify(allComments));
         }
         else alert("Введите все данные (комментарий и автор)");
     }
