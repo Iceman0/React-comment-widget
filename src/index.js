@@ -6,28 +6,23 @@ import ReactDOM from "react-dom";
 class CommentApp extends React.Component {
     constructor() {
         super();
+        const setState  = () => { this.state = {
+            allComments: [],
+            textOfComment: "",
+            author: ""
+        };};
         if (localStorage.getItem("content") !== null) {
             let savedContent = JSON.parse(localStorage.getItem("content"));
-            this.state = {
-                allComments: [],
-                textOfComment: "",
-                author: "",
-                time: ""
-            };
+            setState();
             this.state.allComments = [...savedContent];
         } else {
-            this.state = {
-                allComments: [],
-                textOfComment: "",
-                author: "",
-                time: ""
-            };
+            setState();
         }
     }
     deleteLi(key) {
-        const allComments = this.state.allComments.filter((comment, i) => (key !== i) ? comment : null);
-        this.setState({allComments: allComments});
-        localStorage.setItem('content', JSON.stringify(allComments));
+        const filteredComments = this.state.allComments.filter((comment, i) => (key !== i) ? comment : null);
+        this.setState({allComments: filteredComments});
+        localStorage.setItem('content', JSON.stringify(filteredComments));
     }
 
     addComment() {
@@ -39,7 +34,7 @@ class CommentApp extends React.Component {
             minute: "numeric",
             second: "numeric"
         });
-        const allComments = this.state.allComments;
+        let allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
             allComments.push({
                 text: this.state.textOfComment,
@@ -47,10 +42,9 @@ class CommentApp extends React.Component {
                 time: time
             });
             this.setState({
-                allComments: allComments,
+                allComments,
                 textOfComment: "",
-                author: "",
-                time
+                author: ""
             });
             localStorage.setItem('content', JSON.stringify(allComments));
         }
@@ -58,11 +52,11 @@ class CommentApp extends React.Component {
     }
 
     render() {
-        // language=JavaScript
+        let {allComments, textOfComment, author} = this.state;
         return (
             <div>
                 <ol id="ol">
-                    {this.state.allComments.map((comment, i) => {
+                    {allComments.map((comment, i) => {
                         return (
                             <div className="li" key={i}>
                                 <li>
@@ -83,7 +77,7 @@ class CommentApp extends React.Component {
                 <input
                     type="text"
                     placeholder="Комментарий"
-                    value={this.state.textOfComment}
+                    value={textOfComment}
                     onChange={ev => {
                         this.setState({ textOfComment: ev.target.value });
                     }}
@@ -96,7 +90,7 @@ class CommentApp extends React.Component {
                 <input
                     type="text"
                     placeholder="Автор"
-                    value={this.state.author}
+                    value={author}
                     onChange={ev => {
                         this.setState({ author: ev.target.value });
                     }}
