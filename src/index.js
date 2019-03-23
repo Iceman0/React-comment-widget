@@ -1,5 +1,4 @@
 import "./scss/style.scss";
-
 import React from "react";
 import ReactDOM from "react-dom";
 
@@ -18,6 +17,8 @@ class CommentApp extends React.Component {
         } else {
             setState();
         }
+        this.onChangeText = this.onChangeText.bind(this);
+        this.onChangeAuthor = this.onChangeAuthor.bind(this);
     }
     deleteLi(key) {
         const filteredComments = this.state.allComments.filter((comment, i) => (key !== i) ? comment : null);
@@ -51,6 +52,14 @@ class CommentApp extends React.Component {
         else alert("Введите все данные (комментарий и автор)");
     }
 
+    onChangeText(ev) {
+        this.setState({textOfComment: ev.target.value});
+    }
+
+    onChangeAuthor(ev) {
+        this.setState({author: ev.target.value});
+    }
+
     render() {
         let {allComments, textOfComment, author} = this.state;
         return (
@@ -78,9 +87,7 @@ class CommentApp extends React.Component {
                     type="text"
                     placeholder="Комментарий"
                     value={textOfComment}
-                    onChange={ev => {
-                        this.setState({ textOfComment: ev.target.value });
-                    }}
+                    onChange={this.onChangeText}
                     onKeyUp={ev => {
                         if (ev.keyCode === 13) {
                             this.addComment();
@@ -91,9 +98,7 @@ class CommentApp extends React.Component {
                     type="text"
                     placeholder="Автор"
                     value={author}
-                    onChange={ev => {
-                        this.setState({ author: ev.target.value });
-                    }}
+                    onChange={this.onChangeAuthor}
                     onKeyUp={ev => {
                         if (ev.keyCode === 13) {
                             this.addComment();
