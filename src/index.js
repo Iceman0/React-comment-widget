@@ -19,6 +19,7 @@ class CommentApp extends React.Component {
         }
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeAuthor = this.onChangeAuthor.bind(this);
+        this.onKeyUp = this.onKeyUp.bind(this);
     }
     deleteLi(key) {
         const filteredComments = this.state.allComments.filter((comment, i) => (key !== i) ? comment : null);
@@ -60,6 +61,14 @@ class CommentApp extends React.Component {
         this.setState({author: ev.target.value});
     }
 
+    onKeyUp(ev){
+        if (ev.keyCode === 13) {
+            this.addComment();
+        }
+    }
+
+
+
     render() {
         let {allComments, textOfComment, author} = this.state;
         return (
@@ -88,22 +97,14 @@ class CommentApp extends React.Component {
                     placeholder="Комментарий"
                     value={textOfComment}
                     onChange={this.onChangeText}
-                    onKeyUp={ev => {
-                        if (ev.keyCode === 13) {
-                            this.addComment();
-                        }
-                    }}
+                    onKeyUp={this.onKeyUp}
                 />
                 <input
                     type="text"
                     placeholder="Автор"
                     value={author}
                     onChange={this.onChangeAuthor}
-                    onKeyUp={ev => {
-                        if (ev.keyCode === 13) {
-                            this.addComment();
-                        }
-                    }}
+                    onKeyUp={this.onKeyUp}
                 />
             </div>
         );
