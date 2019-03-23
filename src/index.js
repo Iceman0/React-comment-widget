@@ -21,7 +21,6 @@ class CommentApp extends React.Component {
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeAuthor = this.onChangeAuthor.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
-        this.onClick = this.onClick.bind(this);
     }
     deleteLi(key) {
         const filteredComments = this.state.allComments.filter((comment) => (key !== comment.id) ? comment : null);
@@ -79,11 +78,9 @@ class CommentApp extends React.Component {
         }
     }
 
-    onClick(ev) {
+    onClick(id) {
         this.deleteLi(id);
     }
-
-
 
     render() {
         let {allComments, textOfComment, author} = this.state;
@@ -100,9 +97,7 @@ class CommentApp extends React.Component {
                                     type="button"
                                     id="delButton"
                                     value="Удалить"
-                                    onClick={ev => {
-                                        this.deleteLi(comment.id);
-                                    }}
+                                    onClick={this.onClick.bind(this, comment.id)}
                                 />
                             </div>
                         );
