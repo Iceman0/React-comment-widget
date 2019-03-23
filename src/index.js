@@ -8,7 +8,8 @@ class CommentApp extends React.Component {
         const setState  = () => { this.state = {
             allComments: [],
             textOfComment: "",
-            author: ""
+            author: "",
+            id: 0,
         };};
         if (localStorage.getItem("content") !== null) {
             let savedContent = JSON.parse(localStorage.getItem("content"));
@@ -20,9 +21,10 @@ class CommentApp extends React.Component {
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeAuthor = this.onChangeAuthor.bind(this);
         this.onKeyUp = this.onKeyUp.bind(this);
+        this.onClick = this.onClick.bind(this);
     }
     deleteLi(key) {
-        const filteredComments = this.state.allComments.filter((comment, i) => (key !== i) ? comment : null);
+        const filteredComments = this.state.allComments.filter((comment) => (key !== comment.id) ? comment : null);
         this.setState({allComments: filteredComments});
         localStorage.setItem('content', JSON.stringify(filteredComments));
     }
@@ -38,15 +40,25 @@ class CommentApp extends React.Component {
         });
         let allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
-            allComments.push({
-                text: this.state.textOfComment,
-                author: this.state.author,
-                time: time
-            });
+            if (allComments.length !== 0)
+                allComments.push({
+                    text: this.state.textOfComment,
+                    author: this.state.author,
+                    time,
+                    id: allComments[allComments.length - 1].id + 1
+                });
+            else
+                allComments.push({
+                    text: this.state.textOfComment,
+                    author: this.state.author,
+                    time,
+                    id: 0
+                });
             this.setState({
                 allComments,
                 textOfComment: "",
-                author: ""
+                author: "",
+                id: 0
             });
             localStorage.setItem('content', JSON.stringify(allComments));
         }
@@ -67,6 +79,10 @@ class CommentApp extends React.Component {
         }
     }
 
+    onClick(ev) {
+        this.deleteLi(id);
+    }
+
 
 
     render() {
@@ -74,9 +90,9 @@ class CommentApp extends React.Component {
         return (
             <div>
                 <ol id="ol">
-                    {allComments.map((comment, i) => {
+                    {allComments.map((comment) => {
                         return (
-                            <div className="li" key={i}>
+                            <div className="li" key={comment.id}>
                                 <li>
                                     {comment.text}, {comment.author}, {comment.time}
                                 </li>
@@ -85,7 +101,7 @@ class CommentApp extends React.Component {
                                     id="delButton"
                                     value="Удалить"
                                     onClick={ev => {
-                                        this.deleteLi(i);
+                                        this.deleteLi(comment.id);
                                     }}
                                 />
                             </div>
