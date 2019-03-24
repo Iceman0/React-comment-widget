@@ -45,15 +45,11 @@ class CommentApp extends React.Component {
         });
         let allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
-            allComments.length !== 0 ?
-                this.pushComment(allComments, allComments[allComments.length - 1].id + 1, time)
-            :
-                this.pushComment(allComments, 0, time);
+            this.pushComment(allComments, '_' + Math.random().toString(36).substr(2, 9) , time);
             this.setState({
                 allComments,
                 textOfComment: "",
-                author: "",
-                id: 0
+                author: ""
             });
             localStorage.setItem('content', JSON.stringify(allComments));
         }
