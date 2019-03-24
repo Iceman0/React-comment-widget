@@ -87,7 +87,7 @@ class CommentApp extends React.Component {
                 <ol id="ol">
                     {allComments.map((comment) => {
                         return (
-                            <div className="li" key={comment.id}>
+                            <div className="classLi" key={comment.id}>
                                 <li>
                                     {comment.text}, {comment.author}, {comment.time}
                                 </li>
