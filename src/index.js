@@ -9,8 +9,7 @@ class CommentApp extends React.Component {
             this.state = {
                 allComments: [],
                 textOfComment: "",
-                author: "",
-                id: 0,
+                author: ""
             };
         };
         let savedContent = JSON.parse(localStorage.getItem("content"));
@@ -26,6 +25,15 @@ class CommentApp extends React.Component {
         localStorage.setItem('content', JSON.stringify(filteredComments));
     }
 
+    pushComment(allComments, id, time){
+        allComments.push({
+            text: this.state.textOfComment,
+            author: this.state.author,
+            time,
+            id
+        })
+    }
+
     addComment() {
         let time = new Date().toLocaleString("ru", {
             year: "numeric",
@@ -38,19 +46,9 @@ class CommentApp extends React.Component {
         let allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
             allComments.length !== 0 ?
-                allComments.push({
-                    text: this.state.textOfComment,
-                    author: this.state.author,
-                    time,
-                    id: allComments[allComments.length - 1].id + 1
-                })
+                this.pushComment(allComments, allComments[allComments.length - 1].id + 1, time)
             :
-                allComments.push({
-                    text: this.state.textOfComment,
-                    author: this.state.author,
-                    time,
-                    id: 0
-                });
+                this.pushComment(allComments, 0, time);
             this.setState({
                 allComments,
                 textOfComment: "",
