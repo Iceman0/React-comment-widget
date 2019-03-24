@@ -3,24 +3,22 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 class CommentApp extends React.Component {
-    constructor() {
-        super();
-        const setState  = () => { this.state = {
-            allComments: [],
-            textOfComment: "",
-            author: "",
-            id: 0,
-        };};
-        if (localStorage.getItem("content") !== null) {
-            let savedContent = JSON.parse(localStorage.getItem("content"));
-            setState();
-            this.state.allComments = [...savedContent];
-        } else {
-            setState();
-        }
+    constructor(props) {
+        super(props);
+        const setState = () => {
+            this.state = {
+                allComments: [],
+                textOfComment: "",
+                author: "",
+                id: 0,
+            };
+        };
+        let savedContent = JSON.parse(localStorage.getItem("content"));
+        setState();
+        this.state.allComments = [...savedContent];
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeAuthor = this.onChangeAuthor.bind(this);
-        this.onKeyUp = this.onKeyUp.bind(this);
+        this.onEnterKeyUp = this.onEnterKeyUp.bind(this);
     }
     deleteLi(key) {
         const filteredComments = this.state.allComments.filter((comment) => (key !== comment.id) ? comment : null);
@@ -39,14 +37,14 @@ class CommentApp extends React.Component {
         });
         let allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
-            if (allComments.length !== 0)
+            allComments.length !== 0 ?
                 allComments.push({
                     text: this.state.textOfComment,
                     author: this.state.author,
                     time,
                     id: allComments[allComments.length - 1].id + 1
-                });
-            else
+                })
+            :
                 allComments.push({
                     text: this.state.textOfComment,
                     author: this.state.author,
@@ -72,7 +70,7 @@ class CommentApp extends React.Component {
         this.setState({author: ev.target.value});
     }
 
-    onKeyUp(ev){
+    onEnterKeyUp(ev){
         if (ev.keyCode === 13) {
             this.addComment();
         }
@@ -93,12 +91,9 @@ class CommentApp extends React.Component {
                                 <li>
                                     {comment.text}, {comment.author}, {comment.time}
                                 </li>
-                                <input
-                                    type="button"
-                                    id="delButton"
-                                    value="Удалить"
-                                    onClick={this.onClick.bind(this, comment.id)}
-                                />
+                                <button onClick={this.onClick.bind(this, comment.id)}>
+                                    Удалить
+                                </button>
                             </div>
                         );
                     })}
@@ -108,14 +103,14 @@ class CommentApp extends React.Component {
                     placeholder="Комментарий"
                     value={textOfComment}
                     onChange={this.onChangeText}
-                    onKeyUp={this.onKeyUp}
+                    onKeyUp={this.onEnterKeyUp}
                 />
                 <input
                     type="text"
                     placeholder="Автор"
                     value={author}
                     onChange={this.onChangeAuthor}
-                    onKeyUp={this.onKeyUp}
+                    onKeyUp={this.onEnterKeyUp}
                 />
             </div>
         );
