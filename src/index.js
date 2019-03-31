@@ -2,12 +2,6 @@ import "./scss/style.scss";
 import React from "react";
 import ReactDOM from "react-dom";
 
-const MyComponents = {
-    Button: function Button(props) {
-        return <button className={props.color} value={props.text} onClick={props.onClick}/>;
-    }
-}
-
 class CommentApp extends React.Component {
     constructor(props) {
         super(props);
