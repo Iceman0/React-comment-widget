@@ -2,30 +2,35 @@ import "./scss/style.scss";
 import React from "react";
 import ReactDOM from "react-dom";
 
+const MyComponents = {
+    Button: function Button(props) {
+        return <button className={props.color} value={props.text} onClick={props.onClick}/>;
+    }
+}
+
 class CommentApp extends React.Component {
     constructor(props) {
         super(props);
-        const setState = () => {
-            this.state = {
-                allComments: [],
-                textOfComment: "",
-                author: ""
-            };
-        };
         let savedContent = JSON.parse(localStorage.getItem("content"));
-        setState();
+        this.state = {
+            allComments: [],
+            textOfComment: "",
+            author: ""
+        };
         this.state.allComments = [...savedContent];
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeAuthor = this.onChangeAuthor.bind(this);
         this.onEnterKeyUp = this.onEnterKeyUp.bind(this);
     }
+
     deleteLi(key) {
-        const filteredComments = this.state.allComments.filter((comment) => (key !== comment.id) ? comment : null);
+        const filteredComments = this.state.allComments.filter(comment => key !== comment.id);
         this.setState({allComments: filteredComments});
         localStorage.setItem('content', JSON.stringify(filteredComments));
     }
 
-    pushComment(allComments, id, time){
+    pushComment(id, time){
+        let allComments = this.state.allComments;
         allComments.push({
             text: this.state.textOfComment,
             author: this.state.author,
@@ -45,7 +50,7 @@ class CommentApp extends React.Component {
         });
         let allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
-            this.pushComment(allComments, '_' + Math.random().toString(36).substr(2, 9) , time);
+            this.pushComment('_' + Math.random().toString(36).substr(2, 9) , time);
             this.setState({
                 allComments,
                 textOfComment: "",
@@ -70,8 +75,16 @@ class CommentApp extends React.Component {
         }
     }
 
-    onClick(id) {
-        this.deleteLi(id);
+    deleteButton(field, value) {
+        return (
+            <input
+                type="text"
+                placeholder="Комментарий"
+                value={value}
+                onChange={field}
+                onKeyUp={this.onEnterKeyUp}
+            />
+        );
     }
 
     render() {
@@ -85,27 +98,15 @@ class CommentApp extends React.Component {
                                 <li>
                                     {comment.text}, {comment.author}, {comment.time}
                                 </li>
-                                <button onClick={this.onClick.bind(this, comment.id)}>
+                                <button onClick={this.deleteLi.bind(this, comment.id)}>
                                     Удалить
                                 </button>
                             </div>
                         );
                     })}
                 </ol>
-                <input
-                    type="text"
-                    placeholder="Комментарий"
-                    value={textOfComment}
-                    onChange={this.onChangeText}
-                    onKeyUp={this.onEnterKeyUp}
-                />
-                <input
-                    type="text"
-                    placeholder="Автор"
-                    value={author}
-                    onChange={this.onChangeAuthor}
-                    onKeyUp={this.onEnterKeyUp}
-                />
+                {this.deleteButton(this.onChangeText, textOfComment)}
+                {this.deleteButton(this.onChangeAuthor, author)}
             </div>
         );
     }
