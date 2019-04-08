@@ -7,11 +7,10 @@ class CommentApp extends React.Component {
         super(props);
         let savedContent = JSON.parse(localStorage.getItem("content"));
         this.state = {
-            allComments: [],
+            allComments: [...savedContent],
             textOfComment: "",
             author: ""
         };
-        this.state.allComments = [...savedContent];
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeAuthor = this.onChangeAuthor.bind(this);
         this.onEnterKeyUp = this.onEnterKeyUp.bind(this);
@@ -24,13 +23,18 @@ class CommentApp extends React.Component {
     }
 
     pushComment(id, time){
-        let allComments = this.state.allComments;
+        let allComments = this.state.allComments; //присваивается состояние
         allComments.push({
             text: this.state.textOfComment,
             author: this.state.author,
             time,
             id
-        })
+        });
+        this.setState({
+            allComments,
+            textOfComment: "",
+            author: ""
+        });
     }
 
     addComment() {
@@ -45,11 +49,6 @@ class CommentApp extends React.Component {
         let allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
             this.pushComment('_' + Math.random().toString(36).substr(2, 9) , time);
-            this.setState({
-                allComments,
-                textOfComment: "",
-                author: ""
-            });
             localStorage.setItem('content', JSON.stringify(allComments));
         }
         else alert("Введите все данные (комментарий и автор)");
@@ -69,18 +68,6 @@ class CommentApp extends React.Component {
         }
     }
 
-    deleteButton(field, value) {
-        return (
-            <input
-                type="text"
-                placeholder="Комментарий"
-                value={value}
-                onChange={field}
-                onKeyUp={this.onEnterKeyUp}
-            />
-        );
-    }
-
     render() {
         let {allComments, textOfComment, author} = this.state;
         return (
@@ -88,21 +75,37 @@ class CommentApp extends React.Component {
                 <ol id="ol">
                     {allComments.map((comment) => {
                         return (
-                            <div className="classLi" key={comment.id}>
-                                <li>
-                                    {comment.text}, {comment.author}, {comment.time}
-                                </li>
-                                <button onClick={this.deleteLi.bind(this, comment.id)}>
-                                    Удалить
-                                </button>
-                            </div>
+                            <li key={comment.id}>
+                                <ul>
+                                    <li className="classLi">
+                                        {comment.text}, {comment.author}, {comment.time}
+                                    </li>
+                                    <button onClick={() => this.deleteLi(comment.id)}>
+                                        Удалить
+                                    </button>
+                                </ul>
+                            </li>
                         );
                     })}
                 </ol>
-                {this.deleteButton(this.onChangeText, textOfComment)}
-                {this.deleteButton(this.onChangeAuthor, author)}
+                <InputField field={this.onChangeText} value={textOfComment} name={"Комментарий"} onEnterKeyUp={this.onEnterKeyUp}/>
+                <InputField field={this.onChangeAuthor} value={author} name={"Автор"} onEnterKeyUp={this.onEnterKeyUp}/>
             </div>
         );
+    }
+}
+
+class InputField extends React.Component {
+    render() {
+        return (
+            <input
+                type="text"
+                placeholder={this.props.name}
+                value={this.props.value}
+                onChange={this.props.field}
+                onKeyUp={this.props.onEnterKeyUp}
+            />
+        )
     }
 }
 
