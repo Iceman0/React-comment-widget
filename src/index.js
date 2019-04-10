@@ -13,6 +13,7 @@ class CommentApp extends React.Component {
         };
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeAuthor = this.onChangeAuthor.bind(this);
+        this.onChange = this.onChange.bind(this);
         this.onEnterKeyUp = this.onEnterKeyUp.bind(this);
         this.deleteLi = this.deleteLi.bind(this);
     }
@@ -63,6 +64,13 @@ class CommentApp extends React.Component {
         this.setState({author: ev.target.value});
     }
 
+    onChange(ev) {
+        if (ev.currentTarget.placeholder === "Комментарий")
+            this.setState({textOfComment: ev.target.value});
+        else
+            this.setState({author: ev.target.value});
+    }
+
     onEnterKeyUp(ev){
         if (ev.keyCode === 13) {
             this.addComment();
@@ -89,8 +97,8 @@ class CommentApp extends React.Component {
                         );
                     })}
                 </ol>
-                <InputField field={this.onChangeText} value={textOfComment} name={"Комментарий"} onEnterKeyUp={this.onEnterKeyUp}/>
-                <InputField field={this.onChangeAuthor} value={author} name={"Автор"} onEnterKeyUp={this.onEnterKeyUp}/>
+                <InputField field={this.onChange} value={textOfComment} name={"Комментарий"} onEnterKeyUp={this.onEnterKeyUp}/>
+                <InputField field={this.onChange} value={author} name={"Автор"} onEnterKeyUp={this.onEnterKeyUp}/>
             </div>
         );
     }
