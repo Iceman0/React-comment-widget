@@ -14,10 +14,11 @@ class CommentApp extends React.Component {
         this.onChangeText = this.onChangeText.bind(this);
         this.onChangeAuthor = this.onChangeAuthor.bind(this);
         this.onEnterKeyUp = this.onEnterKeyUp.bind(this);
+        this.deleteLi = this.deleteLi.bind(this);
     }
 
-    deleteLi(key) {
-        const filteredComments = this.state.allComments.filter(comment => key !== comment.id);
+    deleteLi(event) {
+        const filteredComments = this.state.allComments.filter(comment => event.currentTarget.value !== comment.id);
         this.setState({allComments: filteredComments});
         localStorage.setItem('content', JSON.stringify(filteredComments));
     }
@@ -80,7 +81,7 @@ class CommentApp extends React.Component {
                                     <li className="classLi">
                                         {comment.text}, {comment.author}, {comment.time}
                                     </li>
-                                    <button onClick={() => this.deleteLi(comment.id)}>
+                                    <button onClick={this.deleteLi} value={comment.id}>
                                         Удалить
                                     </button>
                                 </ul>
