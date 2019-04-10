@@ -11,8 +11,6 @@ class CommentApp extends React.Component {
             textOfComment: "",
             author: ""
         };
-        this.onChangeText = this.onChangeText.bind(this);
-        this.onChangeAuthor = this.onChangeAuthor.bind(this);
         this.onChange = this.onChange.bind(this);
         this.onEnterKeyUp = this.onEnterKeyUp.bind(this);
         this.deleteLi = this.deleteLi.bind(this);
