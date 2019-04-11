@@ -23,17 +23,20 @@ class CommentApp extends React.Component {
     }
 
     pushComment(id, time){
-        let localAllComments = this.state.allComments; //присваивается состояние
-        localAllComments.push({
+        let allComments = this.state.allComments;
+        let newComment = {
             text: this.state.textOfComment,
             author: this.state.author,
             time,
             id
-        });
+        };
         this.setState({
-            allComments : localAllComments,
+            allComments : [...allComments, newComment],
             textOfComment: "",
             author: ""
+        }, () => {
+            let allCommentsToStorage = this.state.allComments;
+            localStorage.setItem('content', JSON.stringify(allCommentsToStorage));
         });
     }
 
@@ -46,10 +49,8 @@ class CommentApp extends React.Component {
             minute: "numeric",
             second: "numeric"
         });
-        let allComments = this.state.allComments;
         if (this.state.textOfComment !== "" &&  this.state.author !== "") {
             this.pushComment('_' + Math.random().toString(36).substr(2, 9) , time);
-            localStorage.setItem('content', JSON.stringify(allComments));
         }
         else alert("Введите все данные (комментарий и автор)");
     }
