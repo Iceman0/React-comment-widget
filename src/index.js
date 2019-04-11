@@ -5,7 +5,7 @@ import ReactDOM from "react-dom";
 class CommentApp extends React.Component {
     constructor(props) {
         super(props);
-        let savedContent = JSON.parse(localStorage.getItem("content"));
+        let savedContent = JSON.parse(localStorage.getItem("content")) || [];
         this.state = {
             allComments: [...savedContent],
             textOfComment: "",
@@ -23,15 +23,15 @@ class CommentApp extends React.Component {
     }
 
     pushComment(id, time){
-        let allComments = this.state.allComments; //присваивается состояние
-        allComments.push({
+        let localAllComments = this.state.allComments; //присваивается состояние
+        localAllComments.push({
             text: this.state.textOfComment,
             author: this.state.author,
             time,
             id
         });
         this.setState({
-            allComments,
+            allComments : localAllComments,
             textOfComment: "",
             author: ""
         });
@@ -54,16 +54,8 @@ class CommentApp extends React.Component {
         else alert("Введите все данные (комментарий и автор)");
     }
 
-    onChangeText(ev) {
-        this.setState({textOfComment: ev.target.value});
-    }
-
-    onChangeAuthor(ev) {
-        this.setState({author: ev.target.value});
-    }
-
     onChange(ev) {
-        if (ev.currentTarget.placeholder === "Комментарий")
+        if (ev.currentTarget.name === "Комментарий")
             this.setState({textOfComment: ev.target.value});
         else
             this.setState({author: ev.target.value});
@@ -95,25 +87,25 @@ class CommentApp extends React.Component {
                         );
                     })}
                 </ol>
-                <InputField field={this.onChange} value={textOfComment} name={"Комментарий"} onEnterKeyUp={this.onEnterKeyUp}/>
-                <InputField field={this.onChange} value={author} name={"Автор"} onEnterKeyUp={this.onEnterKeyUp}/>
+                <InputField field={this.onChange} value={textOfComment} name={"Комментарий"}  placeholder={"Комментарий"} onEnterKeyUp={this.onEnterKeyUp}/>
+                <InputField field={this.onChange} value={author} name={"Автор"} placeholder={"Автор"} onEnterKeyUp={this.onEnterKeyUp}/>
             </div>
         );
     }
 }
 
-class InputField extends React.Component {
-    render() {
-        return (
-            <input
-                type="text"
-                placeholder={this.props.name}
-                value={this.props.value}
-                onChange={this.props.field}
-                onKeyUp={this.props.onEnterKeyUp}
-            />
-        )
-    }
-}
+const InputField = (props) => {
+    return (
+        <input
+            type="text"
+            name={props.name}
+            placeholder={props.placeholder}
+            value={props.value}
+            onChange={props.field}
+            onKeyUp={props.onEnterKeyUp}
+        />
+    )
+};
+
 
 ReactDOM.render(<CommentApp />, document.querySelector("#app"));
